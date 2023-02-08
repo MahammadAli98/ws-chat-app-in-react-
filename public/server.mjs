@@ -17,17 +17,22 @@ wss.on('connection', (ws) => {
     ws.on('error', console.error)
     let userId = getUniqueID()
     clients[userId] = ws
-
     ws.on('message', (message) => {
-        console.log(`Received message from user: ${userId}: ${message}`)
-        for (const client in clients) { if (clients[client].readyState === WebSocket.OPEN) { clients[client].send(JSON.stringify({ sender: userId, message: JSON.parse(message).message })) } }
+        console.log(JSON.parse(message))
+        console.log(`Received message from user: ${userId} message: ${JSON.parse(message).message}`)
+        for (const client in clients) {
+            if (clients[client].readyState === WebSocket.OPEN) {
+                clients[client].send(JSON.stringify({
+                    type: JSON.parse(message).type,
+                    sender: userId,
+                    message: JSON.parse(message).message,
+                }))
+            }
+        }
     })
 
-    ws.on('close', () => {
-        console.log(`User ${userId} disconnected`)
-        delete clients[userId]
-    })
+    ws.on('close', () => { console.log(`User ${userId} disconnected`); delete clients[userId] })
 })
 
 app.get('/', (req, res) => res.send('Server is up!'))
-server.listen(process.env.PORT, '0.0.0.0', () => { console.log(`Lisesning on port: 5000`); wss.on('error', console.error) })
+server.listen(process.env.PORT, '0.0.0.0', () => { console.log(`Listening on port: 5000`); wss.on('error', console.error) })
