@@ -17,9 +17,7 @@ export default function Room() {
         <div className="Room">
             <button disabled={active} onClick={() => bjoin()}>join group</button><br></br>
             < input disabled={active} type="number" placeholder="Enter room number" name="room Num" value={room} onChange={(e) => setRoom(e.target.value)} /><br></br>
-            <>
-                {(active) ? <Mainsection /> : null}
-            </>
+            <> {(active) ? <Mainsection /> : null} </>
         </div>
     )
 }
